@@ -1,5 +1,6 @@
 package com.example.ibogorkab.ui
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,14 +19,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,18 +54,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ibogorkab.R
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import com.example.ibogorkab.ui.theme.PaleGreen
 
 // Data class for activity item
@@ -59,12 +69,29 @@ data class ActivityItem(
     val userImage: Int?,
     val userInitial: String = "",
     val timeAgo: String,
-    val activityType: String,
+    val activityType: ActivityType,
     val bookTitle: String,
     val bookAuthor: String,
     val bookCover: Int,
-    val bookRating: Float
+    val bookRating: Float,
+    val reviewText: String = "",
+    var likes: Int = 0,
+    var comments: MutableList<Comment> = mutableStateListOf()
 )
+
+// Data class for comments
+data class Comment(
+    val id: Int,
+    val userName: String,
+    val text: String,
+    val timestamp: String
+)
+
+// Enum for activity types
+enum class ActivityType {
+    BORROWING,  // Meminjam buku
+    REVIEWING   // Mengulas buku
+}
 
 @Composable
 fun ActivityScreen(
@@ -73,7 +100,7 @@ fun ActivityScreen(
     onNavigateToProfile: () -> Unit = {}
 ) {
     // Define colors
-    val DarkGreen = Color(0xFF0D7600)
+    val DarkGreen = Color(0xFF0C6B00)
     val LightGreen = Color(0xFF50AD42)
     val white = Color.White
     val backgroundColor = PaleGreen
@@ -86,71 +113,63 @@ fun ActivityScreen(
         Font(R.font.inter_bold, FontWeight.Bold)
     )
 
-    // Sample data
-    val activities = listOf(
-        ActivityItem(
-            id = 1,
-            userName = "Rahmialz",
-            userImage = R.drawable.profile_picture,
-            userInitial = "",
-            timeAgo = "2 jam lalu",
-            activityType = "Meminjam buku",
-            bookTitle = "Edensor",
-            bookAuthor = "Andrea Hirata",
-            bookCover = R.drawable.edensor,
-            bookRating = 5.0f
-        ),
-        ActivityItem(
-            id = 2,
-            userName = "Fahriyan",
-            userImage = null,
-            userInitial = "F",
-            timeAgo = "3 jam lalu",
-            activityType = "Meminjam buku",
-            bookTitle = "Laut Bercerita",
-            bookAuthor = "Leila S. Chudori",
-            bookCover = R.drawable.laut_bercerita,
-            bookRating = 4.0f
-        ),
-        ActivityItem(
-            id = 3,
-            userName = "Assyifa",
-            userImage = null,
-            userInitial = "A",
-            timeAgo = "3 jam lalu",
-            activityType = "Meminjam buku",
-            bookTitle = "The Midnight Library",
-            bookAuthor = "Matt Haig",
-            bookCover = R.drawable.midnight_library,
-            bookRating = 5.0f
-        ),
-        ActivityItem(
-            id = 4,
-            userName = "Gatfan",
-            userImage = null,
-            userInitial = "G",
-            timeAgo = "5 jam lalu",
-            activityType = "Meminjam buku",
-            bookTitle = "Filosofi Teras",
-            bookAuthor = "Henry Manampiring",
-            bookCover = R.drawable.filosofi_teras,
-            bookRating = 4.0f
-        ),
-        ActivityItem(
-            id = 5,
-            userName = "Queenna",
-            userImage = R.drawable.profile_picture,
-            userInitial = "Q",
-            timeAgo = "1 hari lalu",
-            activityType = "Meminjam buku",
-            bookTitle = "The Kite Runner",
-            bookAuthor = "Khaled Hosseini",
-            bookCover = R.drawable.the_kite_runner,
-            bookRating = 5.0f
-        )
-    )
+    // Sample comments
+    val comment1 = Comment(1, "Ahmad", "Bukunya bagus!", "5 menit lalu")
+    val comment2 = Comment(2, "Dinda", "Setuju, alurnya menarik", "3 menit lalu")
 
-    // Selected navigation item state
+    // Sample data with both activity types - matching exactly the design
+    val activities = remember {
+        mutableStateListOf(
+            ActivityItem(
+                id = 1,
+                userName = "Rahmialz",
+                userImage = R.drawable.profile_picture,
+                userInitial = "",
+                timeAgo = "1 jam lalu",
+                activityType = ActivityType.REVIEWING,
+                bookTitle = "Laskar Pelangi",
+                bookAuthor = "Andrea Hirata",
+                bookCover = R.drawable.laskar_pelangi,
+                bookRating = 5.0f,
+                reviewText = "Buku pertama yang aku baca tahun ini. Seru dan banyak plot twist banget!",
+                likes = 24,
+                comments = mutableStateListOf(
+                    Comment(1, "Lutfi", "Setuju banget! Bukunya keren", "30 menit lalu"),
+                    Comment(2, "Nana", "Pengen baca juga nih", "15 menit lalu")
+                )
+            ),
+            ActivityItem(
+                id = 2,
+                userName = "Fahriyan",
+                userImage = null,
+                userInitial = "F",
+                timeAgo = "1 jam lalu",
+                activityType = ActivityType.BORROWING,
+                bookTitle = "Laut Bercerita",
+                bookAuthor = "Leila S. Chudori",
+                bookCover = R.drawable.laut_bercerita,
+                bookRating = 4.0f,
+                likes = 13,
+                comments = mutableStateListOf(comment1)
+            ),
+            ActivityItem(
+                id = 3,
+                userName = "Assyifa23",
+                userImage = null,
+                userInitial = "A",
+                timeAgo = "2 jam lalu",
+                activityType = ActivityType.BORROWING,
+                bookTitle = "The Midnight Library",
+                bookAuthor = "Matt Haig",
+                bookCover = R.drawable.midnight_library,
+                bookRating = 4.0f,
+                likes = 9,
+                comments = mutableStateListOf()
+            )
+        )
+    }
+
+    // State for tracking selected navigation item
     var selectedNavItem by remember { mutableStateOf(1) } // 1 for Activity tab
 
     Scaffold(
@@ -188,7 +207,7 @@ fun ActivityScreen(
                     onClick = { selectedNavItem = 1 },
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.baseline_access_time_24),
+                            painter = painterResource(id = R.drawable.baseline_more_time_24),
                             contentDescription = "Aktivitas"
                         )
                     },
@@ -266,35 +285,83 @@ fun ActivityScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Activity Header
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(white)
-                        .padding(vertical = 16.dp)
+                        .background(
+                            color = DarkGreen,
+                            shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                        )
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        text = "Aktivitas",
-                        color = DarkGreen,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = interFontFamily,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.width(32.dp))
+
+                        // Title
+                        Text(
+                            text = "Aktivitas",
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = interFontFamily,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.width(32.dp))
+                    }
                 }
 
                 // Activity List
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(
-                    )
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = if (activities.isEmpty())
+                        androidx.compose.foundation.layout.PaddingValues(16.dp) else
+                        androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
                 ) {
-                    items(activities) { activity ->
-                        ActivityItemCard(
-                            activity = activity,
-                            interFontFamily = interFontFamily,
-                            highlightColor = DarkGreen,
-                            starColor = yellow
-                        )
+                    if (activities.isEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Belum ada aktivitas",
+                                    fontFamily = interFontFamily,
+                                    fontSize = 16.sp,
+                                    color = Color.Gray
+                                )
+                            }
+                        }
+                    } else {
+                        items(activities) { activity ->
+                            ActivityItemCard(
+                                activity = activity,
+                                interFontFamily = interFontFamily,
+                                highlightColor = DarkGreen,
+                                starColor = yellow,
+                                onLikeClick = {
+                                    // Find the activity and update its likes count
+                                    val index = activities.indexOfFirst { it.id == activity.id }
+                                    if (index != -1) {
+                                        val updatedActivity = activities[index].copy(
+                                            likes = activities[index].likes + 1
+                                        )
+                                        activities[index] = updatedActivity
+                                    }
+                                },
+                                onCommentAdd = { comment ->
+                                    // Find the activity and add the new comment
+                                    val index = activities.indexOfFirst { it.id == activity.id }
+                                    if (index != -1) {
+                                        activities[index].comments.add(comment)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -302,14 +369,25 @@ fun ActivityScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityItemCard(
     activity: ActivityItem,
     interFontFamily: FontFamily,
     highlightColor: Color,
-    starColor: Color
+    starColor: Color,
+    onLikeClick: () -> Unit,
+    onCommentAdd: (Comment) -> Unit
 ) {
     var isLiked by remember { mutableStateOf(false) }
+    var showCommentDialog by remember { mutableStateOf(false) }
+    var commentText by remember { mutableStateOf("") }
+
+    // Animate the like button color
+    val likeButtonColor by animateColorAsState(
+        if (isLiked) highlightColor else Color.Gray,
+        label = "likeButtonColor"
+    )
 
     Card(
         modifier = Modifier
@@ -361,13 +439,19 @@ fun ActivityItemCard(
                 Column {
                     Text(
                         text = activity.userName,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = interFontFamily
                     )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
                     Text(
-                        text = activity.activityType,
-                        fontSize = 14.sp,
+                        text = when(activity.activityType) {
+                            ActivityType.BORROWING -> "Meminjam buku"
+                            ActivityType.REVIEWING -> "Memberi ulasan"
+                        },
+                        fontSize = 10.sp,
                         fontFamily = interFontFamily,
                         color = Color.Gray
                     )
@@ -378,7 +462,7 @@ fun ActivityItemCard(
                 // Time ago
                 Text(
                     text = activity.timeAgo,
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily
                 )
@@ -390,7 +474,7 @@ fun ActivityItemCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
                 // Book cover
                 Image(
@@ -411,23 +495,25 @@ fun ActivityItemCard(
                 ) {
                     Text(
                         text = activity.bookTitle,
-                        fontSize = 16.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         fontFamily = interFontFamily
                     )
 
+                    Spacer(modifier = Modifier.height(2.dp))
+
                     Text(
                         text = activity.bookAuthor,
-                        fontSize = 14.sp,
+                        fontSize = 10.sp,
                         color = Color.Gray,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontFamily = interFontFamily
                     )
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
 
                     // Rating stars
                     Row {
@@ -435,7 +521,7 @@ fun ActivityItemCard(
                             val filled = index < activity.bookRating
                             Icon(
                                 painter = painterResource(
-                                    id = if (filled) R.drawable.baseline_star_24 else R.drawable.baseline_star_24
+                                    id = R.drawable.baseline_star_24
                                 ),
                                 contentDescription = null,
                                 tint = if (filled) starColor else Color.LightGray,
@@ -443,47 +529,136 @@ fun ActivityItemCard(
                             )
                         }
                     }
+
+                    // Show review text if this is a review activity
+                    if (activity.activityType == ActivityType.REVIEWING && activity.reviewText.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = activity.reviewText,
+                            fontSize = 12.sp,
+                            fontFamily = interFontFamily,
+                            color = Color.DarkGray,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
 
-            // Action buttons row
+
+
+            // Action buttons and counters row - exactly matching design layout
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                // Comment button
+                // Comment icon and count - clicking opens comment dialog
                 IconButton(
-                    onClick = { /* Show comment dialog */ },
+                    onClick = { showCommentDialog = true },
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_chat_bubble_outline_24),
                         contentDescription = "Comment",
-                        tint = Color.Gray
+                        tint = Color.Gray,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
+                Text(
+                    text = "${activity.comments.size}",
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    fontFamily = interFontFamily,
+                    modifier = Modifier.padding(top = 10.dp, end = 16.dp)
+                )
 
-                // Like button
+                // Like icon and count
                 IconButton(
-                    onClick = { isLiked = !isLiked },
+                    onClick = {
+                        if (!isLiked) {
+                            isLiked = true
+                            onLikeClick()
+                        }
+                    },
                     modifier = Modifier.size(40.dp)
                 ) {
                     Icon(
-                        painter = painterResource(
-                            id = if (isLiked) R.drawable.baseline_thumb_up_alt_24 else R.drawable.baseline_thumb_up_alt_24
-                        ),
+                        painter = painterResource(id = R.drawable.baseline_thumb_up_alt_24),
                         contentDescription = "Like",
-                        tint = if (isLiked) highlightColor else Color.Gray
+                        tint = likeButtonColor,
+                        modifier = Modifier.size(22.dp)
                     )
                 }
+                Text(
+                    text = "${activity.likes}",
+                    fontSize = 12.sp,
+                    color = if (isLiked) highlightColor else Color.Gray,
+                    fontFamily = interFontFamily,
+                    modifier = Modifier.padding(top = 10.dp)
+                )
             }
         }
     }
+
+    // Comment dialog
+    if (showCommentDialog) {
+        AlertDialog(
+            onDismissRequest = { showCommentDialog = false },
+            title = {
+                Text(
+                    text = "Tambah Komentar",
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                OutlinedTextField(
+                    value = commentText,
+                    onValueChange = { commentText = it },
+                    label = { Text("Tulis komentar Anda", fontFamily = interFontFamily) },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = highlightColor,
+                        cursorColor = highlightColor
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (commentText.isNotEmpty()) {
+                            val newComment = Comment(
+                                id = activity.comments.size + 1,
+                                userName = "Anda",
+                                text = commentText,
+                                timestamp = "Baru saja"
+                            )
+                            onCommentAdd(newComment)
+                            commentText = ""
+                            showCommentDialog = false
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = highlightColor
+                    )
+                ) {
+                    Text("Kirim", fontFamily = interFontFamily)
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showCommentDialog = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Gray
+                    )
+                ) {
+                    Text("Batal", fontFamily = interFontFamily)
+                }
+            }
+        )
+    }
 }
-
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

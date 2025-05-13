@@ -158,7 +158,7 @@ fun EPustakaScreen(
                     Text(
                         text = "ePustaka",
                         color = white,
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = interFontFamily,
                         modifier = Modifier.weight(1f)
@@ -193,7 +193,7 @@ fun EPustakaScreen(
                         Text(
                             "Temukan ePustaka",
                             fontFamily = interFontFamily,
-                            fontSize = 14.sp
+                            fontSize = 12.sp
                         )
                     },
                     leadingIcon = {
@@ -279,7 +279,7 @@ fun EPustakaCard(
             // ePustaka Name
             Text(
                 text = ePustaka.name,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 fontFamily = interFontFamily,

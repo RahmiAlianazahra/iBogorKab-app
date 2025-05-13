@@ -62,6 +62,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -163,20 +164,45 @@ fun BookshelfScreen(
 
     Scaffold(
         topBar = {
+            // Updated header with green background and rounded corners
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(White)
-                    .padding(vertical = 16.dp)
+                    .background(
+                        color = DarkGreen,
+                        shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                    )
+                    .padding(12.dp)
             ) {
-                Text(
-                    text = "Rak Buku",
-                    color = DarkGreen,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = interFontFamily,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(32.dp))  // Space for balance since we don't have a back button
+
+                    // Title
+                    Text(
+                        text = "Rak Buku",
+                        color = White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = interFontFamily,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+
+                    // Search icon
+                    IconButton(
+                        onClick = onSearchPressed,
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = White
+                        )
+                    }
+                }
             }
         },
         bottomBar = {
@@ -454,7 +480,7 @@ fun BorrowedBookCard(
             ) {
                 Text(
                     text = book.title,
-                    fontSize = 16.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = interFontFamily,
                     maxLines = 1,
@@ -463,14 +489,14 @@ fun BorrowedBookCard(
 
                 Text(
                     text = book.author,
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 // Progress bar with percentage
                 Row(
@@ -506,12 +532,12 @@ fun BorrowedBookCard(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 // Remaining time
                 Text(
                     text = "Sisa waktu: ${book.remainingDays} hari",
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily
                 )
@@ -570,7 +596,7 @@ fun QueueBookCard(
             ) {
                 Text(
                     text = book.title,
-                    fontSize = 16.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = interFontFamily,
                     maxLines = 1,
@@ -579,19 +605,19 @@ fun QueueBookCard(
 
                 Text(
                     text = book.author,
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Queue position
                 Text(
                     text = "Antrean: ${book.queuePosition}/${book.totalQueue}",
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily
                 )
@@ -652,7 +678,7 @@ fun HistoryBookCard(
             ) {
                 Text(
                     text = book.title,
-                    fontSize = 16.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = interFontFamily,
                     maxLines = 1,
@@ -661,19 +687,19 @@ fun HistoryBookCard(
 
                 Text(
                     text = book.author,
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Borrow date
                 Text(
                     text = "Tanggal pinjam: ${book.borrowDate}",
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                     color = Color.Gray,
                     fontFamily = interFontFamily
                 )

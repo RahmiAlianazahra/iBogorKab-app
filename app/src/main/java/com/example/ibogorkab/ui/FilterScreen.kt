@@ -157,7 +157,7 @@ fun FilterScreen(
 
                     Text(
                         text = "Filter Kategori",
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = DarkGreen,
                         fontFamily = interFontFamily,
@@ -235,7 +235,7 @@ fun FilterScreen(
                         ) {
                             Text(
                                 text = "Pinjam koleksi tanpa antri",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontFamily = interFontFamily
                             )
 
@@ -259,7 +259,7 @@ fun FilterScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(14.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedButton(
@@ -280,7 +280,7 @@ fun FilterScreen(
                     ) {
                         Text(
                             text = "Atur Ulang",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = interFontFamily
                         )
                     }
@@ -307,7 +307,7 @@ fun FilterScreen(
                     ) {
                         Text(
                             text = "Terapkan",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = interFontFamily
                         )
                     }
@@ -365,7 +365,7 @@ fun FilterOptionCard(
             ) {
                 Text(
                     text = title,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = interFontFamily
                 )
@@ -373,7 +373,7 @@ fun FilterOptionCard(
                 if (subtitle.isNotEmpty()) {
                     Text(
                         text = subtitle,
-                        fontSize = 12.sp,
+                        fontSize = 10.sp,
                         color = gray,
                         fontFamily = interFontFamily
                     )
@@ -445,7 +445,7 @@ fun GenreSelectionScreen(
 
                 Text(
                     text = "Pilihan Genre",
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = DarkGreen,
                     fontFamily = interFontFamily,
@@ -481,7 +481,7 @@ fun GenreSelectionScreen(
                         ) {
                             Text(
                                 text = genre,
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontFamily = interFontFamily
                             )
 
@@ -517,7 +517,7 @@ fun GenreSelectionScreen(
                 ) {
                     Text(
                         text = "Batal",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = interFontFamily
                     )
                 }
@@ -535,7 +535,7 @@ fun GenreSelectionScreen(
                 ) {
                     Text(
                         text = "Simpan",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = interFontFamily
                     )
                 }
@@ -596,7 +596,7 @@ fun YearSelectionScreen(
 
                 Text(
                     text = "Pilih Tahun Terbit",
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = DarkGreen,
                     fontFamily = interFontFamily,
@@ -632,7 +632,7 @@ fun YearSelectionScreen(
                         ) {
                             Text(
                                 text = year,
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontFamily = interFontFamily
                             )
 
@@ -668,7 +668,7 @@ fun YearSelectionScreen(
                 ) {
                     Text(
                         text = "Batal",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = interFontFamily
                     )
                 }
@@ -686,7 +686,7 @@ fun YearSelectionScreen(
                 ) {
                     Text(
                         text = "Simpan",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = interFontFamily
                     )
                 }

@@ -151,11 +151,11 @@ fun SearchResultScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 4.dp)
-                    .height(48.dp),
+                    .height(50.dp),
                 placeholder = {
                     Text(
                         "Temukan buku favoritmu",
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontFamily = interFontFamily
                     )
                 },
@@ -275,7 +275,7 @@ fun BookCard(
                 text = book.title,
                 fontFamily = interFontFamily,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -286,7 +286,7 @@ fun BookCard(
             Text(
                 text = book.author,
                 fontFamily = interFontFamily,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 color = gray,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -310,7 +310,7 @@ fun BookCard(
                 Text(
                     text = " ${book.borrowCount}",
                     fontFamily = interFontFamily,
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                     color = Color.Black
                 )
 
@@ -327,7 +327,7 @@ fun BookCard(
                 Text(
                     text = " ${book.rating}",
                     fontFamily = interFontFamily,
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                     color = Color.Black
                 )
 

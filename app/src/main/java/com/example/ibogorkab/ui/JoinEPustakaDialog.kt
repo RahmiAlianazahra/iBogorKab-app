@@ -137,7 +137,7 @@ fun JoinEPustakaDialog(
                             // Title
                             Text(
                                 text = "Gabung ePustaka",
-                                fontSize = 20.sp,
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = DarkGreen,
                                 fontFamily = interFontFamily
@@ -172,7 +172,7 @@ fun JoinEPustakaDialog(
                                     // Name
                                     Text(
                                         text = "Dinas Arsip dan\nPerpustakaan Daerah",
-                                        fontSize = 16.sp,
+                                        fontSize = 14.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = interFontFamily
                                     )
@@ -184,7 +184,7 @@ fun JoinEPustakaDialog(
                             // Information text
                             Text(
                                 text = "Anda belum terdaftar sebagai anggota ePustaka. Tekan tombol 'Gabung' untuk menjadi anggota dan meminjam koleksi di ePustaka.",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 textAlign = TextAlign.Center,
                                 fontFamily = interFontFamily
                             )
@@ -209,7 +209,7 @@ fun JoinEPustakaDialog(
                                 ) {
                                     Text(
                                         text = "Batal",
-                                        fontSize = 16.sp,
+                                        fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = interFontFamily
                                     )
@@ -229,7 +229,7 @@ fun JoinEPustakaDialog(
                                 ) {
                                     Text(
                                         text = "Gabung",
-                                        fontSize = 16.sp,
+                                        fontSize = 13.sp,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = interFontFamily
                                     )

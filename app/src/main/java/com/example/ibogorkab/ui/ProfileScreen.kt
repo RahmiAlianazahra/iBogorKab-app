@@ -1,8 +1,13 @@
 package com.example.ibogorkab.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,12 +20,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
@@ -41,18 +47,18 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -64,7 +70,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ibogorkab.R
 import com.example.ibogorkab.ui.theme.PaleGreen
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProfileScreen(
     onNavigateToHome: () -> Unit = {},
@@ -75,7 +83,7 @@ fun ProfileScreen(
     onLogout: () -> Unit = {}
 ) {
     // Define colors
-    val DarkGreen = Color(0xFF0D7600)
+    val DarkGreen = Color(0xFF0C6B00)
     val LightGreen = Color(0xFF50AD42)
     val White = Color.White
     val Black = Color.Black
@@ -90,11 +98,27 @@ fun ProfileScreen(
     )
 
     // Tab selection state
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Obrolan", "Pengaturan")
+
+    // Coroutine scope for animations and tab selection
+    val coroutineScope = rememberCoroutineScope()
+
+    // Pager state for horizontal swiping between tabs
+    val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
 
     // Selected navigation item state
     var selectedNavItem by remember { mutableIntStateOf(3) } // Profile is selected by default
+
+    // Lazy column state to track scroll position
+    val lazyListState = rememberLazyListState()
+
+    // Determine if profile card should be visible based on scroll position
+    val showProfileCard by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex == 0 &&
+                    (lazyListState.firstVisibleItemScrollOffset < 200)
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -200,229 +224,372 @@ fun ProfileScreen(
             }
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
+            state = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(PaleGreen)
         ) {
-            // Profile Header with gradient background - only covering half of card
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                // Green background with curved bottom
+            item {
+                // Profile Header with gradient background
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(230.dp) // Only covers half of the card
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    DarkGreen,
-                                    LightGreen
-                                )
-                            ),
-                            shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp)
-                        )
-                )
-
-                // Profile card placed over the background
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Profile Card
-                    Card(
+                    // Green background with curved bottom
+                    Box(
                         modifier = Modifier
-                            .width(320.dp)
-                            .padding(horizontal = 8.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                        colors = CardDefaults.cardColors(containerColor = White)
+                            .fillMaxWidth()
+                            .height(230.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        DarkGreen,
+                                        LightGreen
+                                    )
+                                ),
+                                shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp)
+                            )
+                    )
+
+                    // Profile card placed over the background
+                    AnimatedVisibility(
+                        visible = showProfileCard,
+                        enter = fadeIn() + slideInVertically(),
+                        exit = fadeOut() + slideOutVertically()
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
+                                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            // Profile Image
-                            Image(
-                                painter = painterResource(id = R.drawable.profile_picture),
-                                contentDescription = "Profile Picture",
+                            // Profile Card
+                            Card(
                                 modifier = Modifier
-                                    .size(80.dp)
-                                    .clip(CircleShape)
-                                    .background(LightGray),
-                                contentScale = ContentScale.Crop
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            // Username
-                            Text(
-                                text = "Rahmialz",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = interFontFamily
-                            )
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            // Bio
-                            Text(
-                                text = "Lost in pages, found in words",
-                                fontSize = 14.sp,
-                                color = Gray,
-                                fontFamily = interFontFamily,
-                                textAlign = TextAlign.Center
-                            )
-
-                            Spacer(modifier = Modifier.height(20.dp))
-
-                            // Stats: Following and Followers
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
+                                    .width(320.dp)
+                                    .padding(horizontal = 8.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                                colors = CardDefaults.cardColors(containerColor = White)
                             ) {
-                                // Following
                                 Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
+                                    // Profile Image
+                                    Image(
+                                        painter = painterResource(id = R.drawable.profile_picture),
+                                        contentDescription = "Profile Picture",
+                                        modifier = Modifier
+                                            .size(80.dp)
+                                            .clip(CircleShape)
+                                            .background(LightGray),
+                                        contentScale = ContentScale.Crop
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    // Username
                                     Text(
-                                        text = "100",
-                                        fontSize = 14.sp,
+                                        text = "Rahmialz",
+                                        fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = interFontFamily
                                     )
-                                    Text(
-                                        text = "Following",
-                                        fontSize = 12.sp,
-                                        color = Gray,
-                                        fontFamily = interFontFamily
-                                    )
-                                }
 
-                                // Followers
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                ) {
+                                    Spacer(modifier = Modifier.height(6.dp))
+
+                                    // Bio
                                     Text(
-                                        text = "358",
+                                        text = "Lost in pages, found in words",
                                         fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        fontFamily = interFontFamily
-                                    )
-                                    Text(
-                                        text = "Followers",
-                                        fontSize = 12.sp,
                                         color = Gray,
-                                        fontFamily = interFontFamily
+                                        fontFamily = interFontFamily,
+                                        textAlign = TextAlign.Center
                                     )
+
+                                    Spacer(modifier = Modifier.height(14.dp))
+
+                                    // Stats: Following and Followers
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        // Following
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier.padding(horizontal = 16.dp)
+                                        ) {
+                                            Text(
+                                                text = "100",
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = interFontFamily
+                                            )
+                                            Text(
+                                                text = "Following",
+                                                fontSize = 12.sp,
+                                                color = Gray,
+                                                fontFamily = interFontFamily
+                                            )
+                                        }
+
+                                        // Followers
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier.padding(horizontal = 16.dp)
+                                        ) {
+                                            Text(
+                                                text = "358",
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                fontFamily = interFontFamily
+                                            )
+                                            Text(
+                                                text = "Followers",
+                                                fontSize = 12.sp,
+                                                color = Gray,
+                                                fontFamily = interFontFamily
+                                            )
+                                        }
+                                    }
+
+                                    Spacer(modifier = Modifier.height(14.dp))
+
+                                    // Edit Profile Button
+                                    Button(
+                                        onClick = { onNavigateToEditProfile() },
+                                        modifier = Modifier
+                                            .width(128.dp)
+                                            .height(38.dp),
+                                        shape = RoundedCornerShape(8.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = DarkGreen,
+                                            contentColor = White
+                                        )
+                                    ) {
+                                        Text(
+                                            text = "Ubah Profil",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            fontFamily = interFontFamily
+                                        )
+                                    }
                                 }
-                            }
-
-                            Spacer(modifier = Modifier.height(20.dp))
-
-                            // Edit Profile Button
-                            Button(
-                                onClick = { onNavigateToEditProfile () },
-                                modifier = Modifier
-                                    .width(128.dp)
-                                    .height(38.dp),
-                                shape = RoundedCornerShape(8.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = DarkGreen,
-                                    contentColor = White
-                                )
-                            ) {
-                                Text(
-                                    text = "Ubah Profil",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    fontFamily = interFontFamily
-                                )
                             }
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Tab Row for switching between Chats and Settings
-            TabRow(
-                selectedTabIndex = selectedTabIndex,
-                containerColor = White,
-                contentColor = DarkGreen,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                        height = 3.dp,
-                        color = DarkGreen
-                    )
-                }
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = {
-                            Text(
-                                text = title,
-                                fontFamily = interFontFamily,
-                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal
-                            )
-                        },
-                        selectedContentColor = DarkGreen,
-                        unselectedContentColor = Gray
-                    )
+                // Tab Row for switching between Chats and Settings
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    containerColor = White,
+                    contentColor = DarkGreen,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                            height = 3.dp,
+                            color = DarkGreen
+                        )
+                    }
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            text = {
+                                Text(
+                                    text = title,
+                                    fontFamily = interFontFamily,
+                                    fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal
+                                )
+                            },
+                            selectedContentColor = DarkGreen,
+                            unselectedContentColor = Gray
+                        )
+                    }
                 }
             }
 
-            // Content based on selected tab
-            when (selectedTabIndex) {
-                0 -> ChatsList(interFontFamily) { chatName -> onNavigateToChat(chatName) }
-                1 -> SettingsList(interFontFamily, onLogout)
+            item {
+                // Horizontal Pager for swiping between tabs
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(600.dp)
+                ) { page ->
+                    when (page) {
+                        0 -> ChatsTab(interFontFamily) { chatName -> onNavigateToChat(chatName) }
+                        1 -> SettingsTab(interFontFamily, onLogout)
+                    }
+                }
             }
+        }
+
+        // Synchronize the pager with tab selection
+        LaunchedEffect(pagerState.currentPage) {
+            // Keep tab selection in sync with pager
+            // This block intentionally left empty as the tabs are already updated in the TabRow
         }
     }
 }
 
-
 @Composable
-fun ChatsList(interFontFamily: FontFamily, onChatClick: (String) -> Unit = {}) {
-    Column(
+fun ChatsTab(interFontFamily: FontFamily, onChatClick: (String) -> Unit = {}) {
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(White)
-            .padding(12.dp)
+            .background(Color.White)
     ) {
-        // Chat items with click handler
-        ChatItem(
-            name = "Salsabila",
-            message = "Halo! Apa buku favoritmu?",
-            time = "Kemarin",
-            profilePic = R.drawable.salsabila,
-            interFontFamily = interFontFamily,
-            onClick = { onChatClick("Salsabila") }
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            // Chat items with click handler
+            ChatItem(
+                name = "Salsabila",
+                message = "Halo! Apa buku favoritmu?",
+                time = "Kemarin",
+                profilePic = R.drawable.salsabila,
+                interFontFamily = interFontFamily,
+                onClick = { onChatClick("Salsabila") }
+            )
 
-        Divider(color = Color.LightGray, thickness = 1.dp)
+            Divider(color = Color.LightGray, thickness = 1.dp)
 
-        ChatItem(
-            name = "Ronaldo",
-            message = "Terima kasih atas rekomendasimu ya!",
-            time = "2 hari lalu",
-            profilePic = R.drawable.ronaldo,
-            interFontFamily = interFontFamily,
-            onClick = { onChatClick("Ronaldo") }
-        )
+            ChatItem(
+                name = "Ronaldo",
+                message = "Terima kasih atas rekomendasimu ya!",
+                time = "2 hari lalu",
+                profilePic = R.drawable.ronaldo,
+                interFontFamily = interFontFamily,
+                onClick = { onChatClick("Ronaldo") }
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            ChatItem(
+                name = "Karina",
+                message = "Sepertinya buku itu seru",
+                time = "4 hari lalu",
+                profilePic = R.drawable.karina,
+                interFontFamily = interFontFamily,
+                onClick = { onChatClick("Karina") }
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            ChatItem(
+                name = "Ahmad",
+                message = "Boleh tanya tentang buku terbaru?",
+                time = "1 minggu lalu",
+                profilePic = R.drawable.ahmad,
+                interFontFamily = interFontFamily,
+                onClick = { onChatClick("Ahmad") }
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            ChatItem(
+                name = "Dinda",
+                message = "Sudah selesai baca bukunya?",
+                time = "2 minggu lalu",
+                profilePic = R.drawable.dinda,
+                interFontFamily = interFontFamily,
+                onClick = { onChatClick("Dinda") }
+            )
+        }
+    }
+}
+
+@Composable
+fun SettingsTab(interFontFamily: FontFamily, onLogout: () -> Unit) {
+    val DarkGreen = Color(0xFF0D7600)
+    val Gray = Color(0xFF979797)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            // Settings items
+            SettingsItem(
+                title = "Password",
+                icon = R.drawable.baseline_lock_outline_24,
+                interFontFamily = interFontFamily
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            SettingsItem(
+                title = "Catatan Pribadi",
+                icon = R.drawable.baseline_notes_24,
+                interFontFamily = interFontFamily
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            SettingsItem(
+                title = "Kebijakan & Privasi",
+                icon = R.drawable.baseline_policy_24,
+                interFontFamily = interFontFamily
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            SettingsItem(
+                title = "Bantuan",
+                icon = R.drawable.baseline_help_outline_24,
+                interFontFamily = interFontFamily
+            )
+
+            Divider(color = Color.LightGray, thickness = 1.dp)
+
+            // Logout button
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .clickable { onLogout() },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_logout_24),
+                    contentDescription = "Logout",
+                    tint = DarkGreen,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = "Logout",
+                    fontSize = 12.sp,
+                    fontFamily = interFontFamily,
+                    color = Color.Black
+                )
+            }
+        }
     }
 }
 
@@ -460,15 +627,15 @@ fun ChatItem(
         ) {
             Text(
                 text = name,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = interFontFamily
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = message,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 color = Color.Gray,
                 fontFamily = interFontFamily
             )
@@ -481,80 +648,6 @@ fun ChatItem(
             color = Color.Gray,
             fontFamily = interFontFamily
         )
-    }
-}
-
-@Composable
-fun SettingsList(interFontFamily: FontFamily, onLogout: () -> Unit) {
-    val DarkGreen = Color(0xFF0D7600)
-    val Gray = Color(0xFF979797)
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(White)
-            .padding(16.dp)
-            .verticalScroll(scrollState)
-    ) {
-        // Settings items
-        SettingsItem(
-            title = "Password",
-            icon = R.drawable.baseline_lock_outline_24,
-            interFontFamily = interFontFamily
-        )
-
-        Divider(color = Color.LightGray, thickness = 1.dp)
-
-        SettingsItem(
-            title = "Catatan Pribadi",
-            icon = R.drawable.baseline_notes_24,
-            interFontFamily = interFontFamily
-        )
-
-        Divider(color = Color.LightGray, thickness = 1.dp)
-
-        SettingsItem(
-            title = "Kebijakan & Privasi",
-            icon = R.drawable.baseline_policy_24,
-            interFontFamily = interFontFamily
-        )
-
-        Divider(color = Color.LightGray, thickness = 1.dp)
-
-        SettingsItem(
-            title = "Bantuan",
-            icon = R.drawable.baseline_help_outline_24,
-            interFontFamily = interFontFamily
-        )
-
-
-        Divider(color = Color.LightGray, thickness = 1.dp)
-
-        // Logout button
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-                .clickable { onLogout() },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_logout_24),
-                contentDescription = "Logout",
-                tint = DarkGreen,
-                modifier = Modifier.size(24.dp)
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = "Logout",
-                fontSize = 12.sp,
-                fontFamily = interFontFamily,
-                color = Black
-            )
-        }
     }
 }
 

@@ -25,6 +25,8 @@ import com.example.ibogorkab.ui.ActivityScreen
 import com.example.ibogorkab.ui.BookDetailScreen
 import com.example.ibogorkab.ui.BookshelfScreen
 import com.example.ibogorkab.ui.ChatRoomScreen
+import com.example.ibogorkab.ui.EPustakaData
+import com.example.ibogorkab.ui.EPustakaDetailScreen
 import com.example.ibogorkab.ui.EPustakaScreen
 import com.example.ibogorkab.ui.EReaderScreen
 import com.example.ibogorkab.ui.EditProfileScreen
@@ -36,6 +38,7 @@ import com.example.ibogorkab.ui.LoginScreen
 import com.example.ibogorkab.ui.NotificationScreen
 import com.example.ibogorkab.ui.OnboardingScreen
 import com.example.ibogorkab.ui.ProfileScreen
+import com.example.ibogorkab.ui.RatingReviewScreen
 import com.example.ibogorkab.ui.RegisterScreen
 import com.example.ibogorkab.ui.SearchResultScreen
 import com.example.ibogorkab.ui.SearchScreen
@@ -232,8 +235,24 @@ fun AppNavigation() {
                 onBackPressed = { navController.navigateUp() },
                 onSearchPressed = { navController.navigate("search") },
                 onEPustakaClicked = { ePustaka ->
-                    // Will navigate to ePustaka details when implemented
-                    // navController.navigate("epustaka_details/${ePustaka.id}")
+                    navController.navigate("epustaka_detail/${ePustaka.id}")
+                }
+            )
+        }
+
+        // EPustaka Detail Screen
+        composable(
+            route = "epustaka_detail/{ePustakaId}",
+            arguments = listOf(navArgument("ePustakaId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val ePustakaId = backStackEntry.arguments?.getInt("ePustakaId") ?: 1
+            EPustakaDetailScreen(
+                ePustakaId = ePustakaId,
+                onBackPressed = { navController.navigateUp() },
+                onSearchPressed = { navController.navigate("search") },
+                onCollectionItemClicked = { item ->
+                    // Navigate to book details or reader when collection item is clicked
+                    navController.navigate("book_details/${item.id}")
                 }
             )
         }
@@ -301,9 +320,48 @@ fun AppNavigation() {
 
                     // Navigate to eReader screen
                     navController.navigate("ereader/$bookId/$encodedTitle")
+                },
+                onNavigateToReview = { id, title, author ->
+                    navController.navigate("rating_review/$id/$title/$author")
                 }
             )
         }
+        composable(
+            route = "rating_review/{bookId}/{bookTitle}/{bookAuthor}",
+            arguments = listOf(
+                navArgument("bookId") { type = NavType.IntType },
+                navArgument("bookTitle") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument("bookAuthor") {
+                    type = NavType.StringType
+                    nullable = false
+                }
+            )
+        ) { backStackEntry ->
+            val bookId = backStackEntry.arguments?.getInt("bookId") ?: 1
+            val bookTitle = backStackEntry.arguments?.getString("bookTitle") ?: "Unknown"
+            val bookAuthor = backStackEntry.arguments?.getString("bookAuthor") ?: "Unknown"
+
+            // Decode URL-encoded title and author
+            val decodedTitle = java.net.URLDecoder.decode(bookTitle, "UTF-8")
+            val decodedAuthor = java.net.URLDecoder.decode(bookAuthor, "UTF-8")
+
+            RatingReviewScreen(
+                bookId = bookId,
+                bookTitle = decodedTitle,
+                bookAuthor = decodedAuthor,
+                bookCoverResId = R.drawable.edensor, // You might want to pass this as a parameter too
+                onBackPressed = { navController.navigateUp() },
+                onSubmitReview = { id, rating, review ->
+                    // Handle the submitted review (e.g., save to database)
+                    // Then navigate back
+                    navController.navigateUp()
+                }
+            )
+        }
+
 
         // EReader Screen
         composable(

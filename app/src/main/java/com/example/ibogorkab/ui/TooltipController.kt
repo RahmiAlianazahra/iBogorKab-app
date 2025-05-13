@@ -269,7 +269,7 @@ fun TooltipCard(
                 Text(
                     text = title,
                     color = white,
-                    fontSize = 28.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     fontFamily = fontFamily,
@@ -280,7 +280,7 @@ fun TooltipCard(
                 Text(
                     text = description,
                     color = white,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     lineHeight = 24.sp,
                     fontFamily = fontFamily,
@@ -298,7 +298,7 @@ fun TooltipCard(
                         Text(
                             text = "Cara meminjam buku:",
                             color = white,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = fontFamily,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
@@ -311,14 +311,14 @@ fun TooltipCard(
                                 Text(
                                     text = "${index + 1}.",
                                     color = white,
-                                    fontSize = 16.sp,
+                                    fontSize = 14.sp,
                                     fontFamily = fontFamily,
                                     modifier = Modifier.padding(end = 4.dp)
                                 )
                                 Text(
                                     text = step,
                                     color = white,
-                                    fontSize = 16.sp,
+                                    fontSize = 14.sp,
                                     fontFamily = fontFamily
                                 )
                             }
@@ -336,7 +336,7 @@ fun TooltipCard(
                     Text(
                         text = "Lewati",
                         color = white,
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontFamily = fontFamily,
                         modifier = Modifier
                             .clickable { onSkipClick() }
@@ -354,7 +354,7 @@ fun TooltipCard(
                     ) {
                         Text(
                             text = buttonText,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             fontFamily = fontFamily,
                             modifier = Modifier.padding(horizontal = 16.dp)

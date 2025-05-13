@@ -91,7 +91,7 @@ fun RegisterScreen(
 
     // Define text styles with Inter font
     val titleStyle = TextStyle(
-        fontSize = 20.sp,
+        fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
         color = Black,
         fontFamily = interFontFamily,
@@ -99,13 +99,13 @@ fun RegisterScreen(
     )
 
     val labelStyle = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 12.sp,
         color = Black,
         fontFamily = interFontFamily
     )
 
     val errorStyle = TextStyle(
-        fontSize = 12.sp,
+        fontSize = 10.sp,
         color = ErrorRed,
         fontFamily = interFontFamily
     )
@@ -285,6 +285,7 @@ fun RegisterScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(52.dp)
                         .padding(bottom = 4.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -292,7 +293,10 @@ fun RegisterScreen(
                         unfocusedContainerColor = Color.White,
                         focusedBorderColor = if (nameError != null) ErrorRed else DarkGreen
                     ),
-                    textStyle = TextStyle(fontFamily = interFontFamily),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     singleLine = true,
                     isError = nameError != null
                 )
@@ -329,6 +333,7 @@ fun RegisterScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(52.dp)
                         .padding(bottom = 4.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -336,7 +341,10 @@ fun RegisterScreen(
                         unfocusedContainerColor = Color.White,
                         focusedBorderColor = if (emailError != null) ErrorRed else DarkGreen
                     ),
-                    textStyle = TextStyle(fontFamily = interFontFamily),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     singleLine = true,
                     isError = emailError != null
                 )
@@ -373,6 +381,7 @@ fun RegisterScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(52.dp)
                         .padding(bottom = 4.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -380,7 +389,10 @@ fun RegisterScreen(
                         unfocusedContainerColor = Color.White,
                         focusedBorderColor = if (phoneError != null) ErrorRed else DarkGreen
                     ),
-                    textStyle = TextStyle(fontFamily = interFontFamily),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     singleLine = true,
                     isError = phoneError != null
                 )
@@ -418,6 +430,7 @@ fun RegisterScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(52.dp)
                         .padding(bottom = 4.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -440,7 +453,10 @@ fun RegisterScreen(
                             )
                         }
                     },
-                    textStyle = TextStyle(fontFamily = interFontFamily),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     singleLine = true,
                     isError = passwordError != null
                 )
@@ -477,6 +493,7 @@ fun RegisterScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(52.dp)
                         .padding(bottom = 4.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -499,7 +516,10 @@ fun RegisterScreen(
                             )
                         }
                     },
-                    textStyle = TextStyle(fontFamily = interFontFamily),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     singleLine = true,
                     isError = confirmPasswordError != null
                 )
@@ -565,7 +585,7 @@ fun RegisterScreen(
                     onClick = { validateAndRegister() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(52.dp)
+                        .height(50.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -575,7 +595,7 @@ fun RegisterScreen(
                 ) {
                     Text(
                         text = "Daftar",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = interFontFamily
                     )

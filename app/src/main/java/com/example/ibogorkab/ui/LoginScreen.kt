@@ -64,9 +64,10 @@ fun LoginScreen(
     var passwordError by remember { mutableStateOf<String?>(null) }
 
     // Define exact colors from the design
-    val DarkGreen = Color(0xFF0D7600)
+    val DarkGreen = Color(0xFF0C6B00)
+    val DarkestGreen = Color(0xFF073301)
     val LightGreen = Color(0xFF50AD42)
-    val PaleGreen = Color(0xFFEAFFE5)
+    val PaleGreen = Color(0xFFEFF4ED)
     val Grey = Color(0xFF979797)
     val Yellow = Color(0xFFFDEF02)
     val white = Color.White
@@ -82,14 +83,14 @@ fun LoginScreen(
 
     // Define text styles with Inter font
     val headingStyle = TextStyle(
-        fontSize = 24.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
         color = black,
         fontFamily = interFontFamily
     )
 
     val labelStyle = TextStyle(
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         color = black,
         fontFamily = interFontFamily
     )
@@ -152,12 +153,8 @@ fun LoginScreen(
                 brush = Brush.verticalGradient(
                     colors = listOf(
                         DarkGreen,
-                        LightGreen,
-                        Yellow,
-                        DarkGreen,
-                        DarkGreen,     // Top: Dark Green (0xFF0D7600)
-                        LightGreen,    // Middle: Light Green as transition (0xFF50AD42)
-                        Yellow         // Bottom: Yellow (0xFFFDEF02)
+                        DarkestGreen,
+                        DarkestGreen
                     )
                 )
             )
@@ -232,15 +229,19 @@ fun LoginScreen(
                             email = it
                             if (emailError != null) validateEmail()
                         },
-                        textStyle = TextStyle(fontFamily = interFontFamily),
-                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = TextStyle(
+                            fontSize = 12.sp,
+                            fontFamily = interFontFamily
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth().height(50.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = if (emailError != null) ErrorRed else Color.Gray,
                             unfocusedBorderColor = if (emailError != null) ErrorRed else Color.LightGray,
                             containerColor = white
                         ),
-                        placeholder = { Text("Masukkan email anda", fontFamily = interFontFamily) },
+                        placeholder = { Text("Masukkan email anda", fontSize = 12.sp, fontFamily = interFontFamily) },
                         singleLine = true,
                         isError = emailError != null
                     )
@@ -275,8 +276,11 @@ fun LoginScreen(
                             password = it
                             if (passwordError != null) validatePassword()
                         },
-                        textStyle = TextStyle(fontFamily = interFontFamily),
-                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = TextStyle(
+                            fontSize = 12.sp,
+                            fontFamily = interFontFamily
+                        ),
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = if (passwordError != null) ErrorRed else Color.Gray,
@@ -298,7 +302,7 @@ fun LoginScreen(
                                 )
                             }
                         },
-                        placeholder = { Text("Masukkan kata sandi anda", fontFamily = interFontFamily) },
+                        placeholder = { Text("Masukkan kata sandi anda", fontSize = 12.sp, fontFamily = interFontFamily) },
                         singleLine = true,
                         isError = passwordError != null
                     )
@@ -324,7 +328,8 @@ fun LoginScreen(
                             Text(
                                 text = "Lupa Password?",
                                 color = orangeRed,
-                                fontFamily = interFontFamily
+                                fontFamily = interFontFamily,
+                                fontSize = 12 .sp
                             )
                         }
                     }
@@ -344,7 +349,7 @@ fun LoginScreen(
                     ) {
                         Text(
                             text = "Masuk",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             color = white,
                             fontWeight = FontWeight.Bold,
                             fontFamily = interFontFamily

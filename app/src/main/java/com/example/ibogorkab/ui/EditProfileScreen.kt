@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -59,7 +60,7 @@ fun EditProfileScreen(
     // Define colors
     val DarkGreen = Color(0xFF0D7600)
     val LightGreen = Color(0xFF50AD42)
-    val PaleGreen = Color(0xFFEAFFE5)
+    val PaleGreen = Color(0xFFEFF4ED)
     val White = Color.White
     val Gray = Color(0xFF979797)
 
@@ -82,7 +83,7 @@ fun EditProfileScreen(
                 title = {
                     Text(
                         text = "Ubah Profil",
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = interFontFamily
                     )
@@ -129,7 +130,7 @@ fun EditProfileScreen(
                             painter = painterResource(id = R.drawable.profile_picture),
                             contentDescription = "Profile Picture",
                             modifier = Modifier
-                                .size(120.dp)
+                                .size(100.dp)
                                 .clip(CircleShape)
                                 .background(Color.LightGray),
                             contentScale = ContentScale.Crop
@@ -138,7 +139,7 @@ fun EditProfileScreen(
                         // Edit icon
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
+                                .size(25.dp)
                                 .clip(CircleShape)
                                 .background(DarkGreen)
                                 .clickable { /* Open image picker */ }
@@ -164,7 +165,7 @@ fun EditProfileScreen(
                 // Name field
                 Text(
                     text = "Nama",
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = interFontFamily,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -174,11 +175,16 @@ fun EditProfileScreen(
                     onValueChange = { name = it },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(50.dp)
                         .border(
                             width = 1.dp,
                             color = DarkGreen,
                             shape = RoundedCornerShape(8.dp)
                         ),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
@@ -193,7 +199,7 @@ fun EditProfileScreen(
                 // Email field
                 Text(
                     text = "Email",
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = interFontFamily,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -203,11 +209,16 @@ fun EditProfileScreen(
                     onValueChange = { email = it },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(50.dp)
                         .border(
                             width = 1.dp,
                             color = DarkGreen,
                             shape = RoundedCornerShape(8.dp)
                         ),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
@@ -222,7 +233,7 @@ fun EditProfileScreen(
                 // Phone field
                 Text(
                     text = "Nomor Telepon",
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = interFontFamily,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -232,11 +243,16 @@ fun EditProfileScreen(
                     onValueChange = { phone = it },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(50.dp)
                         .border(
                             width = 1.dp,
                             color = DarkGreen,
                             shape = RoundedCornerShape(8.dp)
                         ),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
@@ -251,7 +267,7 @@ fun EditProfileScreen(
                 // Bio field
                 Text(
                     text = "Deskripsi",
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = interFontFamily,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -267,6 +283,10 @@ fun EditProfileScreen(
                             color = DarkGreen,
                             shape = RoundedCornerShape(8.dp)
                         ),
+                    textStyle = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = interFontFamily
+                    ),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = Color.Transparent,
@@ -291,7 +311,7 @@ fun EditProfileScreen(
                 ) {
                     Text(
                         text = "Simpan",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = interFontFamily
                     )

@@ -93,7 +93,7 @@ fun NotificationScreen(
                         color = DarkGreen,
                         fontFamily = interFontFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 },

@@ -177,7 +177,7 @@ fun KoleksiBukuScreen(
                     Text(
                         text = "Koleksi Buku",
                         color = white,
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = interFontFamily,
                         modifier = Modifier.weight(1f)
@@ -226,7 +226,7 @@ fun KoleksiBukuScreen(
                         Text(
                             "Temukan buku favoritmu",
                             fontFamily = interFontFamily,
-                            fontSize = 14.sp
+                            fontSize = 12.sp
                         )
                     },
                     leadingIcon = {

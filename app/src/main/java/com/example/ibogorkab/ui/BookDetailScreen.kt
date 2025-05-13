@@ -84,7 +84,8 @@ fun BookDetailScreen(
     bookId: Int = 1,
     onBackPressed: () -> Unit = {},
     onBorrowBook: () -> Unit = {},
-    onReadBook: () -> Unit = {}
+    onReadBook: () -> Unit = {},
+    onNavigateToReview: (Int, String, String) -> Unit = { _, _, _ -> }
 ) {
 
 
@@ -186,41 +187,55 @@ fun BookDetailScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                // Top App Bar
-                Row(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White)
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .background(
+                            color = DarkGreen,
+                            shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                        )
+                        .padding(10.dp)
                 ) {
-                    IconButton(onClick = onBackPressed) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = DarkGreen
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Back button
+                        IconButton(
+                            onClick = onBackPressed,
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = white
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        // Title
+                        Text(
+                            text = "Detail Buku",
+                            color = white,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = interFontFamily,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        // MoreOptionsMenu with white icon
+                        MoreOptionsMenu(
+                            onShare = {
+                                /* Handle share action */
+                            },
+                            onRecommend = {
+                                /* Handle recommend action */
+                            },
+                            fontFamily = interFontFamily,
+                            tint = Color.White
                         )
                     }
-
-                    Text(
-                        text = "Detail Buku",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = interFontFamily,
-                        color = DarkGreen,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    // MoreOptionsMenu positioned at the end of the row
-                    MoreOptionsMenu(
-                        onShare = {
-                            /* Handle share action */
-                        },
-                        onRecommend = {
-                            /* Handle recommend action */
-                        },
-                        fontFamily = interFontFamily
-                    )
                 }
 
                 // Book Cover and Basic Info
@@ -254,7 +269,7 @@ fun BookDetailScreen(
                         // Book Title
                         Text(
                             text = book.title,
-                            fontSize = 22.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             fontFamily = interFontFamily
@@ -263,7 +278,7 @@ fun BookDetailScreen(
                         // Author
                         Text(
                             text = book.author,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             color = gray,
                             textAlign = TextAlign.Center,
                             fontFamily = interFontFamily
@@ -287,11 +302,11 @@ fun BookDetailScreen(
                                         painter = painterResource(id = R.drawable.queue_logo),
                                         contentDescription = "Queues",
                                         tint = DarkGreen,
-                                        modifier = Modifier.size(24.dp)
+                                        modifier = Modifier.size(18.dp)
                                     )
                                     Text(
                                         text = " ${book.queues}",
-                                        fontSize = 18.sp,
+                                        fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = interFontFamily
                                     )
@@ -309,11 +324,11 @@ fun BookDetailScreen(
                                         painter = painterResource(id = R.drawable.reader_icon),
                                         contentDescription = "Reads",
                                         tint = DarkGreen,
-                                        modifier = Modifier.size(28.dp)
+                                        modifier = Modifier.size(24.dp)
                                     )
                                     Text(
                                         text = " ${book.reads}",
-                                        fontSize = 18.sp,
+                                        fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = interFontFamily
                                     )
@@ -448,6 +463,7 @@ fun BookDetailScreen(
                                 color = DarkGreen,
                                 fontFamily = interFontFamily
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = book.category,
                                 fontSize = 14.sp,
@@ -464,6 +480,7 @@ fun BookDetailScreen(
                                 color = DarkGreen,
                                 fontFamily = interFontFamily
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = book.publisher,
                                 fontSize = 14.sp,
@@ -480,6 +497,7 @@ fun BookDetailScreen(
                                 color = DarkGreen,
                                 fontFamily = interFontFamily
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = book.year,
                                 fontSize = 14.sp,
@@ -496,6 +514,7 @@ fun BookDetailScreen(
                                 color = DarkGreen,
                                 fontFamily = interFontFamily
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = book.isbn,
                                 fontSize = 14.sp,
@@ -521,7 +540,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Sinopsis Buku",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = interFontFamily
                             )
@@ -530,7 +549,7 @@ fun BookDetailScreen(
 
                             Text(
                                 text = book.synopsis,
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontFamily = interFontFamily,
                                 maxLines = if (showFullSynopsis) Int.MAX_VALUE else 4,
                                 overflow = if (showFullSynopsis) TextOverflow.Visible else TextOverflow.Ellipsis
@@ -543,6 +562,7 @@ fun BookDetailScreen(
                                 Text(
                                     text = if (showFullSynopsis) "Sembunyikan" else "Selengkapnya",
                                     color = DarkGreen,
+                                    fontSize = 10.sp,
                                     fontFamily = interFontFamily
                                 )
                             }
@@ -566,7 +586,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Ulasan",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = interFontFamily
                             )
@@ -582,7 +602,7 @@ fun BookDetailScreen(
                                     painter = painterResource(id = review.reviewerImage),
                                     contentDescription = "Reviewer",
                                     modifier = Modifier
-                                        .size(40.dp)
+                                        .size(30.dp)
                                         .clip(CircleShape)
                                         .background(Color.LightGray)
                                 )
@@ -591,7 +611,7 @@ fun BookDetailScreen(
 
                                 Text(
                                     text = review.reviewerName,
-                                    fontSize = 14.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = interFontFamily
                                 )
@@ -616,7 +636,7 @@ fun BookDetailScreen(
                             // Review text
                             Text(
                                 text = review.comment,
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontFamily = interFontFamily
                             )
 
@@ -629,16 +649,21 @@ fun BookDetailScreen(
                                     Text(
                                         text = "Lainnya",
                                         color = DarkGreen,
-                                        fontFamily = interFontFamily
+                                        fontFamily = interFontFamily,
+                                        fontSize = 10.sp
                                     )
                                 }
 
-                                TextButton(onClick = { /* Add review */ }) {
+                                TextButton(onClick = {
+                                    // Navigate to review screen passing book info
+                                    onNavigateToReview(book.id, book.title, book.author)
+                                }) {
                                     Text(
                                         text = "Beri ulasan",
                                         color = DarkGreen,
                                         fontWeight = FontWeight.Bold,
-                                        fontFamily = interFontFamily
+                                        fontFamily = interFontFamily,
+                                        fontSize = 10.sp
                                     )
                                 }
                             }
@@ -661,7 +686,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Buku Serupa",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = interFontFamily,
                                 color = Color.Black,
@@ -703,7 +728,7 @@ fun BookDetailScreen(
                             onClick = { showJoinDialog = true },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp),
+                                .height(45.dp),
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = DarkGreen,
@@ -712,7 +737,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Pinjam",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = interFontFamily
                             )
@@ -733,7 +758,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Unduh",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = interFontFamily
                             )
@@ -753,7 +778,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Mengunduh...",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontFamily = interFontFamily,
                                 color = DarkGreen
                             )
@@ -794,7 +819,7 @@ fun BookDetailScreen(
                         ) {
                             Text(
                                 text = "Baca",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = interFontFamily
                             )
@@ -856,7 +881,7 @@ fun SimilarBookCard(
         // Book title
         Text(
             text = book.title,
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -866,7 +891,7 @@ fun SimilarBookCard(
         // Author
         Text(
             text = book.author,
-            fontSize = 12.sp,
+            fontSize = 10.sp,
             color = gray,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

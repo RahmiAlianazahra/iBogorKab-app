@@ -30,7 +30,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(onNavigateToOnboarding: () -> Unit) {
     // Define exact colors from the design
-    val DarkGreen = Color(0xFF0D7600)
+    val DarkGreen = Color(0xFF0C6B00)
     val LightGreen = Color(0xFF50AD42)
     val Yellow = Color(0xFFFDEF02)
     val white = Color.White
@@ -54,12 +54,8 @@ fun SplashScreen(onNavigateToOnboarding: () -> Unit) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Yellow,
-                        LightGreen,
                         DarkGreen,
-                        DarkGreen,
-                        DarkGreen,
-                        LightGreen,
+                        DarkGreen
                     )
                 )
             ),
@@ -72,7 +68,7 @@ fun SplashScreen(onNavigateToOnboarding: () -> Unit) {
                 text = "Persembahan dari",
                 style = TextStyle(
                     color = white,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
@@ -85,7 +81,7 @@ fun SplashScreen(onNavigateToOnboarding: () -> Unit) {
             Image(
                 painter = painterResource(id = R.drawable.kab_bogor_logo),
                 contentDescription = "iBogorkab Logo",
-                modifier = Modifier.size(280.dp)
+                modifier = Modifier.size(230.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +90,7 @@ fun SplashScreen(onNavigateToOnboarding: () -> Unit) {
                 text = "Dinas Perpustakaan dan Arsip Daerah",
                 style = TextStyle(
                     color = white,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
@@ -104,7 +100,7 @@ fun SplashScreen(onNavigateToOnboarding: () -> Unit) {
                 text = "Kabupaten Bogor",
                 style = TextStyle(
                     color = white,
-                    fontSize = 22.sp,
+                    fontSize = 18.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center

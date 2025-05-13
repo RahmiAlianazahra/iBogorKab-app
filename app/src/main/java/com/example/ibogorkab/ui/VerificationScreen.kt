@@ -95,7 +95,7 @@ fun VerificationScreen(
                     Image(
                         painter = painterResource(id = R.drawable.emailverification),
                         contentDescription = "Email Verification",
-                        modifier = Modifier.size(150.dp)
+                        modifier = Modifier.size(120.dp)
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
@@ -104,7 +104,7 @@ fun VerificationScreen(
                     Text(
                         text = "Email Verifikasi Terkirim!",
                         style = TextStyle(
-                            fontSize = 20.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = DarkGreen,
                             fontFamily = interFontFamily,
@@ -130,7 +130,7 @@ fun VerificationScreen(
                                 append(" pada email yang Anda terima.")
                             },
                             style = TextStyle(
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 color = Color.DarkGray,
                                 fontFamily = interFontFamily,
                                 textAlign = TextAlign.Center
@@ -188,7 +188,7 @@ fun VerificationScreen(
                             Text(
                                 text = "Belum menerima email?",
                                 style = TextStyle(
-                                    fontSize = 14.sp,
+                                    fontSize = 12.sp,
                                     color = Color.DarkGray,
                                     fontFamily = interFontFamily
                                 )

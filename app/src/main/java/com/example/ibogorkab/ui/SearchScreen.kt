@@ -121,7 +121,7 @@ fun SearchScreen(
                         Text(
                             "Temukan buku favoritmu",
                             fontFamily = interFontFamily,
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
                             color = gray
                         )
                     },

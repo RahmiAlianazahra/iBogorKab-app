@@ -80,7 +80,7 @@ fun ChatRoomScreen(
     val DarkGreen = Color(0xFF0D7600)
     val LightGreen = Color(0xFF50AD42)
     val White = Color.White
-    val PaleGreen = Color(0xFFEAFFE5)
+    val PaleGreen = Color(0xFFEFF4ED)
     val Gray = Color(0xFF979797)
     val MessageGreen = Color(0xFF006400)
 

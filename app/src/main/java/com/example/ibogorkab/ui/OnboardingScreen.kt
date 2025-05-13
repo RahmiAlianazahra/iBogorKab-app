@@ -120,7 +120,7 @@ fun OnboardingScreen(
                 ) {
                     Text(
                         text = "Daftar",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = interFontFamily,
                         fontWeight = FontWeight.Bold
                     )
@@ -142,7 +142,7 @@ fun OnboardingScreen(
                 ) {
                     Text(
                         text = "Masuk",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = interFontFamily,
                         fontWeight = FontWeight.Bold
                     )
@@ -206,7 +206,7 @@ fun OnboardingPage(
                     else -> "Saling terhubung dan berbagi rekomendasi"
                 },
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     fontFamily = interFontFamily,
